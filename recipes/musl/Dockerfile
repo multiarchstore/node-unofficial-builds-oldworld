@@ -1,26 +1,26 @@
-FROM alpine:3.19
+FROM ubuntu:22.04
 
 ARG GID=1000
 ARG UID=1000
 
-RUN addgroup -g $GID node \
-    && adduser -u $UID -G node -s /bin/sh -D node
+RUN addgroup --gid $GID node \
+    && adduser --gid $GID --uid $UID --disabled-password --gecos node node
 
-RUN apk add --no-cache \
-        libstdc++ \
-    && apk add --no-cache --virtual .build-deps \
-        bash \
-        binutils-gold \
-        curl \
-        g++ \
-        gcc \
-        gnupg \
-        libgcc \
-        linux-headers \
-        make \
-        python3 \
-        ccache \
-        xz
+RUN apt-get update \
+    && apt-get dist-upgrade -y \
+    && apt-get update \
+    && apt-get install -y \
+         git \
+         g++-12 \
+         curl \
+         make \
+         python3 \
+         python3-distutils \
+         ccache \
+         xz-utils
+
+RUN mkdir -p /opt/x-tools \
+    && curl -L https://github.com/loong64/cross-tools/releases/download/20250801/x86_64-cross-tools-loongarch64-unknown-linux-musl-stable.tar.xz | tar xJf - -C /opt/x-tools
 
 COPY --chown=node:node run.sh /home/node/run.sh
 

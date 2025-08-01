@@ -1,32 +1,26 @@
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
 ARG GID=1000
 ARG UID=1000
 
-RUN apt-get update \
-    && apt-get dist-upgrade -y \
-    && apt-get install -y software-properties-common \
-    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
-    && add-apt-repository -y ppa:deadsnakes/ppa \
-    && apt-get update \
-    && apt-get install -y \
-         adduser \
-         git \
-	 g++-13 \
-         curl \
-         make \
-         python3.10 \
-         ccache \
-         xz-utils \
-         g++-14-loongarch64-linux-gnu \
-         gcc-14-loongarch64-linux-gnu-base \
-         gcc-14-loongarch64-linux-gnu
-
 RUN addgroup --gid $GID node \
     && adduser --gid $GID --uid $UID --disabled-password --gecos node node
 
-RUN rm -f /usr/bin/python3
-RUN ln -s /usr/bin/python3.10 /usr/bin/python3
+RUN apt-get update \
+    && apt-get dist-upgrade -y \
+    && apt-get update \
+    && apt-get install -y \
+         git \
+         g++-12 \
+         curl \
+         make \
+         python3 \
+         python3-distutils \
+         ccache \
+         xz-utils
+
+RUN mkdir -p /opt/x-tools \
+    && curl -L https://github.com/loong64/cross-tools/releases/download/20250801/x86_64-cross-tools-loongarch64-unknown-linux-gnu-stable.tar.xz | tar xJf - -C /opt/x-tools
 
 COPY --chown=node:node run.sh /home/node/run.sh
 
