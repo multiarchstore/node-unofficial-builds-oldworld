@@ -28,7 +28,8 @@ export CC_host="ccache gcc-12"
 export CXX_host="ccache g++-12"
 export CC="ccache /opt/x-tools/loongarch64-unknown-linux-gnu/bin/loongarch64-unknown-linux-gnu-gcc"
 export CXX="ccache /opt/x-tools/loongarch64-unknown-linux-gnu/bin/loongarch64-unknown-linux-gnu-g++"
-
+export C_FLAGS="-static-libgcc"
+expirt CXX_FLAGS="-static-libstdc++ -static-libgcc"
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="loong64" \
   ARCH="loong64" \
