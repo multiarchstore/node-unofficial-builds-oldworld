@@ -11,7 +11,7 @@ commit="$5"
 fullversion="$6"
 source_url="$7"
 source_urlbase="$8"
-config_flags="--openssl-no-asm"
+config_flags="--partly-static --openssl-no-asm"
 
 cd /home/node
 
@@ -28,8 +28,6 @@ export CC_host="ccache gcc-12"
 export CXX_host="ccache g++-12"
 export CC="ccache /opt/x-tools/loongarch64-unknown-linux-gnu/bin/loongarch64-unknown-linux-gnu-gcc"
 export CXX="ccache /opt/x-tools/loongarch64-unknown-linux-gnu/bin/loongarch64-unknown-linux-gnu-g++"
-export CFLAGS="-static-libgcc"
-export CXXFLAGS="-static-libstdc++ -static-libgcc"
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="loong64" \
   ARCH="loong64" \
